@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -18,7 +18,14 @@ namespace BoxField
         //used to draw boxes on screen
         SolidBrush boxBrush = new SolidBrush(Color.White);
 
-        //TODO - create a list of Boxes
+        //box size variable
+        int boxSize = 30;
+
+        //variable to create new box after certain time
+        int waitTime = 7;
+
+        //creates a list of Boxes
+        List<Box> boxes = new List<Box>();
 
         public GameScreen()
         {
@@ -27,7 +34,9 @@ namespace BoxField
 
         private void GameScreen_Load(object sender, EventArgs e)
         {
-            //TODO - create initial box object and add it to list of Boxes
+            //creates initial box object and adds it to list of Boxes
+            Box b = new Box(500, 0);
+            boxes.Add(b);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -100,16 +109,43 @@ namespace BoxField
 
         private void gameLoop_Tick(object sender, EventArgs e)
         {
-            //TODO - update position of each box
 
-            //TODO - remove box from list if it is off screen
+            waitTime--;
+
+            if (waitTime == 0)
+            {
+                // add new boxes
+                Box b = new Box(500, 0);
+                boxes.Add(b);
+
+                waitTime = 7;
+            }
+
+            //updates position of each box
+            for (int i = 0; i < boxes.Count; i++)
+            {
+                boxes[i].y += 6;
+            }
+
+            //add new boxes
+
+            //remove box from list if it is off screen
+            if (boxes[0].y >= this.Height)
+            {
+                boxes.RemoveAt(0);
+            }
 
             Refresh();
         }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //TODO - draw each box to the screen
+            //draw each box to the screen
+            foreach(Box b in boxes)
+            {
+                e.Graphics.FillRectangle(boxBrush, b.x, b.y, boxSize, boxSize);
+            }
+
         }
 
 
